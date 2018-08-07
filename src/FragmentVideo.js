@@ -19,11 +19,14 @@ class FragmentVideo extends Component{
             videoprogress:0,
             sound:'primary'
         }
+        
         this.onCanPlay = this.onCanPlay.bind(this);
         this.playOrPause = this.playOrPause.bind(this);
         this.onTimeUpdate = this.onTimeUpdate.bind(this);
         this.isMute = this.isMute.bind(this);
         this.onChangeVolume = this.onChangeVolume.bind(this);
+        //视频等待缓冲
+        this.onWaiting = this.onWaiting.bind(this);
     }
     // 接收了新的属性
     componentWillReceiveProps(nextProps) {
@@ -34,6 +37,7 @@ class FragmentVideo extends Component{
         });
         this.video.current.currentTime = this.state.cutstart;
     }
+    
     onCanPlay(e){
         this.setState({
             disable:'',
@@ -52,8 +56,14 @@ class FragmentVideo extends Component{
         }
         // message.info('可以播放了')
     }
+    onWaiting(){
+        message.info('缓冲中。。。')
+        this.setState({
+            loading:true,
+        })
+    }
     playOrPause(e){
-        if(this.video.current.currentTime > this.state.cutend){
+        if(this.video.current.currentTime >= this.state.cutend){
             this.video.current.currentTime = this.state.cutstart;
         }
         // message.info(this.video.current.paused==true?'当前视频处于暂停状态':'当前视频处于播放状态')
@@ -79,7 +89,7 @@ class FragmentVideo extends Component{
             videoprogress: Math.floor((this.video.current.currentTime-this.state.cutstart)/this.state.duration*100)
         })
 
-        if(this.video.current.currentTime > this.state.cutend){
+        if(this.video.current.currentTime >= this.state.cutend){
             this.video.current.pause();
             this.setState({
                 play_icon:'reload'
@@ -117,15 +127,15 @@ class FragmentVideo extends Component{
         return Math.floor(stime / 3600) > 0 ? h + ":" + m + ":" + s : m + ":" + s;
     }
     render(){
-        const wxurl = 'http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400'
-        const url = wxurl+'#t='+this.state.cutstart+','+this.state.cutend
+        // const wxurl = 'http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400'
+        const url = this.props.url+'#t='+this.state.cutstart+','+this.state.cutend
         // const url = "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"
         const ButtonGroup = Button.Group;
         return (
             <div >
                 <Spin spinning={this.state.loading} size="large">
                     <video  width='500px' preload='meta' ref={this.video} onCanPlay={this.onCanPlay}
-                        onTimeUpdate={this.onTimeUpdate}>
+                        onTimeUpdate={this.onTimeUpdate} onWaiting={this.onWaiting}>
                         <source src={url} type="video/mp4"/>
                     Sorry! Your browser does not support HTML5 video.
                     </video>
@@ -147,7 +157,7 @@ class FragmentVideo extends Component{
                         {this.secondToDate(this.state.currentTime)}/{this.secondToDate(this.state.duration)}
                         </Col>
                         <Col span={3}>
-                        <Progress percent={this.state.videoprogress} />
+                        <Progress percent={this.state.videoprogress} showInfo={false}/>
                         </Col>
                         <Col span={1}>
                             <ButtonGroup>

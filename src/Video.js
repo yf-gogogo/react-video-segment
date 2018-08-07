@@ -76,18 +76,18 @@ class Video extends Component{
         console.log('play1: ', this.state.cutend);
     }
     render(){
-        const url = 'http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400'
+        // const url = 'http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400'
         // const url = "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov#t=10,20"
-        // const url = "http://192.168.71.201:8080/mediaPlay/test.mp4"
+        const url = "http://192.168.71.201:8080/mediaPlay/test.mp4"
         // const url = "http://111.230.89.209/doc/Redial.mp4"
-        // const url = "http://192.168.71.23/video/thevoice.mp4#t=10,20"
+        // const url = "http://192.168.71.23/video/thevoice.mp4"
         const marks = {
             0: '00:00:00',
             100: this.secondToDate(this.state.dur),
         };
         return (
             <div className='center' >
-                <video src={url} muted='muted' ref={this.video} preload='meta'
+                <video src={url} muted='muted' ref={this.video} preload='meta' width='500px'
                         controls='controls' onCanPlay={this.onCanPlay} onLoadedmetadata={this.onLoadedmetadata}
                         onTimeUpdate={this.onTimeUpdate}>
                     Sorry! Your browser does not support HTML5 video.
@@ -103,7 +103,7 @@ class Video extends Component{
                 <p>分割片段长度：{this.secondToDate(this.state.cutstart)}-{this.secondToDate(this.state.cutend)}</p>
                 {/* <Button type="primary" onClick={this.playFragment}>播放片段</Button> */}
                 </div>
-                <FragmentVideo cutstart={this.state.cutstart} cutend={this.state.cutend}/>
+                <FragmentVideo url={url} cutstart={this.state.cutstart} cutend={this.state.cutend}/>
             </div>
 
         )
