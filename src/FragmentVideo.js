@@ -13,7 +13,7 @@ class FragmentVideo extends Component{
             cutend:this.props.cutend,
             disable:'disabled',
             loading:true,
-            play_icon:'loading',
+            play_icon:'play-circle',
             currentTime:0,
             duration:this.props.cutend-this.props.cutstart,
             videoprogress:0,
@@ -38,9 +38,9 @@ class FragmentVideo extends Component{
         this.setState({
             disable:'',
             loading:false,
-            play_icon:'play-circle',
             duration:this.state.cutend-this.state.cutstart
         })
+
         if(this.video.current.muted){
             this.setState({
                 sound:'dashed'
@@ -50,19 +50,22 @@ class FragmentVideo extends Component{
                 sound:'primary'
             })
         }
+        // message.info('可以播放了')
     }
     playOrPause(e){
         if(this.video.current.currentTime > this.state.cutend){
             this.video.current.currentTime = this.state.cutstart;
         }
-        message.info(this.state.cutstart)
+        // message.info(this.video.current.paused==true?'当前视频处于暂停状态':'当前视频处于播放状态')
         if(this.video.current.paused){
-
+            
             this.video.current.play();
             this.setState({
                 play_icon:'pause-circle'
             })
+            message.info('播放开始')
         }else{
+            message.info('播放停止')
             this.video.current.pause();
             this.setState({
                 play_icon:'play-circle'
@@ -79,8 +82,9 @@ class FragmentVideo extends Component{
         if(this.video.current.currentTime > this.state.cutend){
             this.video.current.pause();
             this.setState({
-                play_icon:'play-circle'
+                play_icon:'reload'
             })
+            // message.info('设置按钮为play'+this.video.current.currentTime)
         }
     }
     isMute(e){
@@ -118,7 +122,7 @@ class FragmentVideo extends Component{
         // const url = "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"
         const ButtonGroup = Button.Group;
         return (
-            <div>
+            <div >
                 <Spin spinning={this.state.loading} size="large">
                     <video  width='500px' preload='meta' ref={this.video} onCanPlay={this.onCanPlay}
                         onTimeUpdate={this.onTimeUpdate}>
@@ -128,18 +132,24 @@ class FragmentVideo extends Component{
                 </Spin>
                 
                 
-                <div >
-                    <Progress percent={this.state.videoprogress}  style={{ width: 400 }} />
-                    <p>播放进度：{this.secondToDate(this.state.currentTime)}/{this.secondToDate(this.state.duration)}</p>
+                <div  >
+                    {/* <Progress percent={this.state.videoprogress}  style={{ width: 400 }} />
+                    <p>播放进度：{this.secondToDate(this.state.currentTime)}/{this.secondToDate(this.state.duration)}</p> */}
                     {/* <p>传递的参数：{this.secondToDate(this.state.cutstart)}-{this.secondToDate(this.state.cutend)}当前： {this.state.currentTime}</p> */}
-                    <Row style={{ marginBottom: 40 }}>
+                    <Row style={{ marginBottom: 40 }} type="flex" align="middle">
                         <Col span={1} offset={8}>
                             <Button icon="sound" type={this.state.sound} disabled={this.state.disable} onClick={this.isMute}></Button>
                         </Col>
-                        <Col span={2}>
+                        <Col span={1}>
                             <Slider  onChange={this.onChangeVolume} defaultValue={100} />
                         </Col>
-                        <Col span={5}>
+                        <Col span={2}>
+                        {this.secondToDate(this.state.currentTime)}/{this.secondToDate(this.state.duration)}
+                        </Col>
+                        <Col span={3}>
+                        <Progress percent={this.state.videoprogress} />
+                        </Col>
+                        <Col span={1}>
                             <ButtonGroup>
                                 {/* <Button icon="sound" type={this.state.sound} disabled={this.state.disable} onClick={this.isMute}></Button>
                                 <Button icon="minus" disabled={this.state.disable} onClick={this.minusVolume}></Button>
@@ -150,6 +160,7 @@ class FragmentVideo extends Component{
                     </Row>                  
                     
                 </div>
+                
             </div>
         );
     }

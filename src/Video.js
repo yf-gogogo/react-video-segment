@@ -101,7 +101,7 @@ class Video extends Component{
                 </div>
                 <div >
                 <p>分割片段长度：{this.secondToDate(this.state.cutstart)}-{this.secondToDate(this.state.cutend)}</p>
-                <Button type="primary" onClick={this.playFragment}>播放片段</Button>
+                {/* <Button type="primary" onClick={this.playFragment}>播放片段</Button> */}
                 </div>
                 <FragmentVideo cutstart={this.state.cutstart} cutend={this.state.cutend}/>
             </div>
